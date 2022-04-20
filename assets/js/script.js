@@ -223,6 +223,7 @@ function fetchCoords(search) {
 function handleSearchFormSubmit(e) {
   // Don't continue if there is nothing in the search form
   if (destination==="" || date==='') {
+    alert('Please input both a destination AND date.')
     return;
   }
 console.log('here')
