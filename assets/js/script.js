@@ -1,3 +1,8 @@
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+};
 // set the modal menu element
 const modalEl = document.getElementById('search-modal');
 const btn = document.getElementById("search-btn");
@@ -276,11 +281,13 @@ var displayEvents= function(data){
         var eventDateTime = data._embedded.events[i].dates.start.dateTime;
         var eventTime = data._embedded.events[i].dates.start.localTime;
         var eventDate = data._embedded.events[i].dates.start.localDate;
+        var eventCity= destination;
         var card = document.createElement('div');
         var cardImage = document.createElement('img');
         var cardTitle = document.createElement('div');
         var cardTime = document.createElement('p');
         var cardDate = document.createElement('p');
+        var cardCity = document.createElement('p');
         var cardButtons = document.createElement('div');
         var cardSave= document.createElement('button');
         var cardVisit= document.createElement('button');
@@ -293,6 +300,7 @@ var displayEvents= function(data){
         cardButtons.setAttribute('class', 'p-2 font-bold text-xl mb-2');
         cardTime.setAttribute('class', 'p-2 text-gray-700 text-base');
         cardDate.setAttribute('class', 'p-2 text-gray-700 text-base');
+        cardCity.setAttribute('class', 'p-2 text-gray-700 text-base');
         cardSave.setAttribute('class', 'p-2 w-1/3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-500 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm');
         cardSave.setAttribute('id', 'saveEvent'+i);
         cardVisit.setAttribute('class', 'mt-3 p-2 w-1/3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm');
@@ -303,13 +311,14 @@ var displayEvents= function(data){
         cardImage.setAttribute('src', eventImg);
         cardImage.setAttribute('class', 'shrink grow w-full h-1/3 border-b-2 border-black');
         cardDate.textContent = 'Event Date: '+eventDate;
+        cardCity.textContent = 'Location: '+eventCity.toUpperCase();
         cardTime.textContent = 'Start Time: '+eventTime;
         cardSave.textContent = `Save`;
         cardVisit.textContent = `Visit`;
 
         cardButtons.append(cardVisit, cardSave);
 
-        card.append(cardImage, cardTitle,cardDate, cardTime, cardButtons);
+        card.append(cardImage, cardTitle,cardDate, cardTime, cardCity, cardButtons);
         
         eventGrid.append(card);
         tempArray= {
@@ -320,9 +329,9 @@ var displayEvents= function(data){
             name: eventName,
             date: eventDate,
             time: eventTime,
+            city: eventCity,
         };
         currentEvents.push(tempArray);
-        console.log(currentEvents);
 }}
 
 var saveEvents = function(){
@@ -367,11 +376,13 @@ var createSaved = function(){
     var eventImg = event.image
     var eventTime =event.time;
     var eventDate = event.date;
+    var eventCity = event.city;
     var card = document.createElement('div');
     var cardImage = document.createElement('img');
     var cardTitle = document.createElement('div');
     var cardTime = document.createElement('p');
     var cardDate = document.createElement('p');
+    var cardCity = document.createElement('p');
     var cardButtons = document.createElement('div');
     var cardDelete= document.createElement('button');
     var cardVisit= document.createElement('button');
@@ -384,6 +395,7 @@ var createSaved = function(){
     cardButtons.setAttribute('class', 'p-2 font-bold text-xl mb-2');
     cardTime.setAttribute('class', 'p-2 text-gray-700 text-base');
     cardDate.setAttribute('class', 'p-2 text-gray-700 text-base');
+    cardCity.setAttribute('class', 'p-2 text-gray-700 text-base');
     cardDelete.setAttribute('class', 'p-2 w-1/3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-500 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm');
     cardDelete.setAttribute('id', 'deleteEvent'+i);
     cardVisit.setAttribute('class', 'mt-3 p-2 w-1/3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm');
@@ -395,12 +407,13 @@ var createSaved = function(){
     cardImage.setAttribute('class', 'shrink grow w-full h-1/3 border-b-2 border-black');
     cardDate.textContent = 'Event Date: '+eventDate;
     cardTime.textContent = 'Start Time: '+eventTime;
+    cardCity.textContent = 'Location: '+eventCity.toUpperCase();
     cardDelete.textContent = `Delete`;
     cardVisit.textContent = `Visit`;
 
     cardButtons.append(cardVisit, cardDelete);
 
-    card.append(cardImage, cardTitle,cardDate, cardTime, cardButtons);
+    card.append(cardImage, cardTitle,cardDate, cardTime, cardCity, cardButtons);
     
     sidebarContent.append(card);
 
@@ -443,11 +456,6 @@ var buttonHandler = function(event){
   }
 };
 
-function removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
 
 var initialize = function(){
   retrieveDestination();
@@ -515,6 +523,8 @@ $('#search-modal #modal-search-btn').click(function(){
     }
     saveDestination();
     saveDate();
+    currentEvents=[]
+    removeAllChildNodes(eventGrid);
     handleSearchFormSubmit();
     modalEl.style.display='none';
     weather.style.display='block'
