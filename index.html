@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+    <script rel="stylesheet" src="https://cdn.tailwindcss.com"></script>
+    <script rel="stylesheet" src="./assets/css/style.css"></script>
+    <title>Document</title>
+</head>
+<body class="font-mono">
+    <header class="text-gray-600 body-font bg-orange-500 rounded-b-lg shadow-lg shadow-black/50 border border-black sticky absolute top-0 z-40">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+          <nav class="flex lg:w-100 flex-wrap items-center text-base md:ml-auto">
+          </nav>
+          <a class="flex order-first lg:order-none lg:w-1/2 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-start mb-4 md:mb-0">
+<!-- Add logo -->
+            <span class="ml-3 text-xl font-mono text-2xl p-5 text-orange-500 bg-gray-300 border border-black   rounded-xl shadow-lg shadow-white/50">Trip Planner</span>
+          </a>
+          <div class="lg:w-1/2 inline-flex lg:justify-end ml-5 lg:ml-0">
+            <button id='openSaved' class="inline-flex items-center bg-gray-300 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base mt-4 md:mt-0 text-orange-500 font-mono rounded-lg shadow-lg shadow-white/50 border border-black">Saved Events
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+      <section class="text-gray-600 body-font bg-gradient-to-b from-orange-500 rounded-t-lg">
+        <div class="container mx-auto flex  py-24 md:flex-row flex-col items-center  w-full border-0">
+          <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center pl-5">
+            <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">What is your next destination?
+              <br class="hidden lg:inline-block"><span>When are you going?</span>
+            </h1>
+            <p class="mb-8 leading-relaxed">We'll help you find something to do!</p>
+            <div class="flex justify-center">
+              <button id="search-btn" class="inline-flex text-white bg-orange-500  py-2 px-6 focus:outline-none hover:bg-orange-600 rounded text-lg border border-black">Start your search!</button>
+              <button id='reset-btn' class="ml-4 inline-flex text-gray-700 bg-gray-300  py-2 px-6 focus:outline-none hover:bg-gray-400 rounded text-lg border border-black">Reset</button>
+            </div>
+          </div>
+          <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 mr-5">
+            <img class="object-cover object-center rounded mr-5" alt="hero" src="https://dummyimage.com/720x600">
+          </div>
+        </div>
+      </section>
+
+<!-- Modal Content -->
+<!-- Main modal -->
+<div id='search-modal' class="hidden fixed z-20 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+  
+      <!-- This element is to trick the browser into centering the modal contents. -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-start grid-cols-1">
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Search your destination!</h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500 pb-5">Where are you going? Let us help you find something to keep you busy!</br><span class="font-bold text-black"> Please input a destination AND date.</span></p>
+              </div>
+              <div class="flex  flex-wrap justify-around flex-row mx-auto bg-orange-500 p-5 border-2 border-black rounded-md border-double shadow-lg shadow-lg shadow-orange-500/50">
+                <div class="flex grid justify-center row-auto">
+                  <label for="modalDestination" class="text-center">Destination</label></br>
+                  <input name="destination" id="modalDestination" type="text" autofocus="true" class="form-input border-2 border-black" />
+                </div>
+                <div class="flex grid justify-center row-auto">
+                  <label for="modalDate" class="text-center">Date Visiting</label></br>
+                  <input type="text" class="border-2 border-black form-control" id="modalDate" placeholder="mm/dd/yyyy" autocomplete="off" />
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button id='modal-search-btn' type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-500 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Search</button>
+          <button id='modal-canel-btn' type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Saved Event Bar -->
+<section id='sidebar' class="absolute inset-y-0 right-0 sticky z-50 hidden">
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-49" aria-hidden="true"></div>
+  <div class="xs:w-screen md:w-1/2 h-screen shadow-md bg-orange-500 px-1 absolute inset-y-0 right-0 sticky z-50 overflow-y-auto">
+    <button id='closeSaved' class=" my-5 mx-auto w-full items-center bg-gray-300 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base  text-orange-500 font-mono rounded-lg shadow-lg shadow-white/50 border border-black">Close Saved Events
+    </button>
+    <div id="sidebarContent">
+
+    </div>
+  </div>
+</section>
+<!-- Add main content -->
+<!-- Weather Seciton -->
+<section id='weather' class="hidden text-gray-600 body-font relative z-10">
+    <div class="flex flex-col w-100 px-5 py-10 mx-0 flex justify-center">
+        <!-- Weather Cards -->
+        <section id='today-info' class="flex flex-col w-100 px-5 py-10 mx-0 flex justify-center">
+            <div id='today-label' class=" text-2xl mb-5 flex basis-1 grow w-100 align-center justify-around align-center">
+
+            </div>
+            <div id='today' class="flex basis-1 grow w-100 align-center justify-around align-center">
+
+            </div>
+        </section>
+        <section id="forecast-info" class="flex flex-col w-100 px-5 py-10 mx-0 flex justify-center">
+            <div id='forecast-label' class=" text-2xl mb-5 flex basis-1 grow w-100 align-center justify-around align-center">
+
+            </div>
+            <div id='forecast' class=" flex flex-row flex-wrap grow align-center justify-center align-center w-100">
+
+            </div>
+        </section>
+    </div>
+</section>
+
+<!-- Events Section -->
+<section id='events' class="text-gray-600 body-font relative flex flex-col w-100 px-5 py-10 mx-0 flex justify-center z-10" >
+    <div id="event-label" class=" text-2xl mb-5 flex basis-1 grow w-100 align-center justify-around align-center">
+
+    </div>
+    <div id="event-grid" class="flex flex-row flex-wrap grow w-100 align-center justify-around align-center" >
+    </div>
+</section>
+<!-- End of Main -->
+<section class="text-gray-600 body-font bg-gradient-to-t from-orange-500">
+    <div class="container px-5 py-24 mx-auto">
+      <div class="flex flex-col text-center w-full mb-20">
+        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Our Team</h1>
+        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">The team that brought you this All-in-One Trip Planner.</p>
+      </div>
+      <div class="flex flex-wrap -m-2">
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/80x80">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Eric Carlson</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/84x84">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Luna Roberge</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/88x88">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Jhonathan Rosario</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/90x90">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Myra Ibarra</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/94x94">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Vue Lee</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+          <div class="h-full flex items-center border-black border p-4 rounded-lg">
+            <img alt="team" class="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src="https://dummyimage.com/98x98">
+            <div class="flex-grow">
+              <h2 class="text-gray-900 title-font font-medium">Abyou Geletu</h2>
+              <p class="text-gray-500">Student</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+
+        <footer class="text-gray-600 body-font bg-orange-500">
+            <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
+              <a class="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+                <!-- Add logo -->
+                <span class="ml-3 text-xl">Trip Planner</span>
+              </a>
+              <p class="text-sm text-black sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-black sm:py-2 sm:mt-0 mt-4">© 2020 Trip Planner
+              </p>
+              <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+                <a class="text-gray-500">
+                  <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                  </svg>
+                </a>
+                <a class="ml-3 text-gray-500">
+                  <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+                  </svg>
+                </a>
+                <a class="ml-3 text-gray-500">
+                  <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+                  </svg>
+                </a>
+                <a class="ml-3 text-gray-500">
+                  <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                    <circle cx="4" cy="4" r="2" stroke="none"></circle>
+                  </svg>
+                </a>
+              </span>
+            </div>
+          </footer> 
+          <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"
+          integrity="sha512-0fcCRl828lBlrSCa8QJY51mtNqTcHxabaXVLPgw/jPA5Nutujh6CbTdDgRzl9aSPYW/uuE7c4SffFUQFBAy6lg=="
+          crossorigin="anonymous"
+        ></script>
+        <script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/plugin/utc.min.js" 
+          integrity="sha512-m00bfmYnAl3plEBlQfeQUhw/U2uvmw29V2+jxSWpAjankMWS+zAsjezbKWDEJNXqWq9o9qQZSOiA2RKDpa4D5w==" 
+          crossorigin="anonymous"
+        ></script>
+        <script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/plugin/timezone.min.js" 
+          integrity="sha512-pslqxxHAYPCxaSeFSmXXxDkLejD5dbFVC66aiVq0z4v7VTJBU+wqcG1OpNh4p3MjS2D6NCwz/H2QmSc7dXxryg==" 
+          crossorigin="anonymous"
+        ></script> 
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/jquery-ui-touch-punch@0.2.3/jquery.ui.touch-punch.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+          <script src="./assets/js/script.js"></script>
+</body>
+</html>
